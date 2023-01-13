@@ -15,6 +15,10 @@ resource "google_cloud_run_service" "invy_api" {
           value = local.project
         }
         env {
+          name  = "GCS_AVATAR_IMAGE_BUCKET_NAME"
+          value = google_storage_bucket.avatar_images.name
+        }
+        env {
           name  = "ALLOWED_ORIGINS"
           value = "https://invy-app.com"
         }
