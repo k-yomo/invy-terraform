@@ -12,6 +12,11 @@ resource "google_sql_database_instance" "invy" {
       ipv4_enabled = true
     }
 
+    database_flags {
+      name  = "max_connections"
+      value = "100"
+    }
+
     backup_configuration {
       enabled                        = true
       location                       = "asia"
