@@ -21,3 +21,18 @@ resource "google_dns_record_set" "api_invy_app_com" {
     prevent_destroy = false
   }
 }
+
+resource "google_dns_record_set" "invy_app_com_mx" {
+  name         = google_dns_managed_zone.invy_app_com.dns_name
+  type         = "MX"
+  ttl          = 3600
+  managed_zone = google_dns_managed_zone.invy_app_com.name
+
+  rrdatas = [
+    "1 aspmx.l.google.com.",
+    "5 alt1.aspmx.l.google.com.",
+    "5 alt2.aspmx.l.google.com.",
+    "10 alt3.aspmx.l.google.com.",
+    "10 alt4.aspmx.l.google.com.",
+  ]
+}
