@@ -21,3 +21,17 @@ resource "google_dns_record_set" "api_invy_app_dev" {
     prevent_destroy = false
   }
 }
+
+resource "google_dns_record_set" "link_invy_app_dev" {
+  name = "link.${google_dns_managed_zone.invy_app_dev.dns_name}"
+  type = "A"
+  ttl  = 86400
+
+  managed_zone = google_dns_managed_zone.invy_app_dev.name
+
+  rrdatas = ["199.36.158.100"]
+
+  lifecycle {
+    prevent_destroy = false
+  }
+}

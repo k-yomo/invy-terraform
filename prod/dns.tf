@@ -22,6 +22,20 @@ resource "google_dns_record_set" "api_invy_app_com" {
   }
 }
 
+resource "google_dns_record_set" "link_invy_app_com" {
+  name = "link.${google_dns_managed_zone.invy_app_com.dns_name}"
+  type = "A"
+  ttl  = 86400
+
+  managed_zone = google_dns_managed_zone.invy_app_com.name
+
+  rrdatas = ["199.36.158.100"]
+
+  lifecycle {
+    prevent_destroy = false
+  }
+}
+
 resource "google_dns_record_set" "invy_app_com_mx" {
   name         = google_dns_managed_zone.invy_app_com.dns_name
   type         = "MX"
