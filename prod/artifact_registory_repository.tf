@@ -14,6 +14,7 @@ resource "google_artifact_registry_repository_iam_binding" "invy_viewers" {
   members = [
     # Cloud RuN service agent
     "serviceAccount:service-${local.project_number}@serverless-robot-prod.iam.gserviceaccount.com",
+    "serviceAccount:service-${local.dev_project_number}@serverless-robot-prod.iam.gserviceaccount.com",
   ]
 }
 

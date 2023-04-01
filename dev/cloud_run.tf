@@ -5,7 +5,7 @@ resource "google_cloud_run_service" "invy_api" {
   template {
     spec {
       containers {
-        image = "asia-northeast1-docker.pkg.dev/invy-dev/invy/invy-api:latest"
+        image = "asia-northeast1-docker.pkg.dev/invy-prod/invy/invy-api:latest"
         env {
           name  = "APP_ENV"
           value = "dev"
