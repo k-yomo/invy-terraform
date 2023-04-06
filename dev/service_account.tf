@@ -4,6 +4,12 @@ resource "google_service_account" "invy_api" {
   display_name = "'invy-api-${local.env}' Service Account"
 }
 
+resource "google_project_iam_member" "invy_api_is_cloudtrace_agent" {
+  project = local.project
+  member  = "serviceAccount:${google_service_account.invy_api.email}"
+  role    = "roles/cloudtrace.agent"
+}
+
 resource "google_service_account" "terraform_ci" {
   account_id   = "terraform-ci-${local.env}"
   display_name = "'terraform-ci-${local.env}' Service Account"
