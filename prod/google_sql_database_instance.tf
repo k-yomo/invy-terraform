@@ -14,7 +14,7 @@ resource "google_sql_database_instance" "invy" {
 
     database_flags {
       name  = "max_connections"
-      value = "100"
+      value = "1000"
     }
 
     backup_configuration {
@@ -51,12 +51,4 @@ resource "google_sql_user" "postgres" {
   name     = "postgres"
   instance = google_sql_database_instance.invy.name
   password = data.google_secret_manager_secret_version.invy_db_password.secret_data
-}
-
-resource "google_project_iam_binding" "cloudsql_client" {
-  project = local.project
-  role    = "roles/cloudsql.client"
-  members = [
-    "serviceAccount:${google_service_account.invy_api.email}",
-  ]
 }

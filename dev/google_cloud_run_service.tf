@@ -1,4 +1,3 @@
-
 resource "google_cloud_run_service" "invy_api" {
   name     = "invy-api-${local.env}"
   location = local.default_region
@@ -120,8 +119,10 @@ resource "google_cloud_run_service_iam_policy" "invy_api_no_auth" {
   policy_data = data.google_iam_policy.no_auth.policy_data
 }
 
-resource "google_project_iam_member" "api_ci_is_run_admin" {
-  project = local.project
-  role    = "roles/run.admin"
-  member  = "serviceAccount:${google_service_account.api_ci.email}"
+resource "google_cloud_run_service_iam_member" "api_ci_is_run_admin" {
+  project  = local.project
+  location = google_cloud_run_service.invy_api.location
+  service  = google_cloud_run_service.invy_api.name
+  role     = "roles/run.admin"
+  member   = "serviceAccount:${google_service_account.api_ci.email}"
 }
