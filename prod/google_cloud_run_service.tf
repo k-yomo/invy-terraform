@@ -40,6 +40,14 @@ resource "google_cloud_run_service" "invy_api" {
           }
         }
         env {
+          name = "REDIS_URL"
+          value = upstash_redis_database.invy.endpoint
+        }
+        env {
+          name = "REDIS_PASSWORD"
+          value = upstash_redis_database.invy.password
+        }
+        env {
           name  = "DB_CONNECTION_NAME"
           value = "/cloudsql/${google_sql_database_instance.invy.connection_name}"
         }
