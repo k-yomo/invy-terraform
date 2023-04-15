@@ -1,4 +1,3 @@
-
 resource "google_cloud_run_service" "invy_api" {
   name     = "invy-api-${local.env}"
   location = local.default_region
@@ -40,16 +39,20 @@ resource "google_cloud_run_service" "invy_api" {
           }
         }
         env {
+          name  = "DB_CONNECTION_NAME"
+          value = "/cloudsql/${google_sql_database_instance.invy.connection_name}"
+        }
+        env {
           name  = "REDIS_URL"
           value = upstash_redis_database.invy.endpoint
         }
         env {
-          name  = "REDIS_PASSWORD"
-          value = upstash_redis_database.invy.password
+          name  = "REDIS_PORT"
+          value = upstash_redis_database.invy.port
         }
         env {
-          name  = "DB_CONNECTION_NAME"
-          value = "/cloudsql/${google_sql_database_instance.invy.connection_name}"
+          name  = "REDIS_PASSWORD"
+          value = upstash_redis_database.invy.password
         }
         env {
           name  = "FIREBASE_SECRET_KEY_PATH"
@@ -111,21 +114,12 @@ resource "google_cloud_run_domain_mapping" "invy_api" {
   }
 }
 
-data "google_iam_policy" "no_auth" {
-  binding {
-    role = "roles/run.invoker"
-    members = [
-      "allUsers",
-    ]
-  }
-}
-
-resource "google_cloud_run_service_iam_policy" "invy_api_no_auth" {
+resource "google_cloud_run_service_iam_member" "all_users_are_run_invoker" {
+  project  = local.project
   location = google_cloud_run_service.invy_api.location
-  project  = google_cloud_run_service.invy_api.project
   service  = google_cloud_run_service.invy_api.name
-
-  policy_data = data.google_iam_policy.no_auth.policy_data
+  role     = "roles/run.invoker"
+  member   = "allUsers"
 }
 
 resource "google_cloud_run_service_iam_member" "api_ci_is_run_admin" {

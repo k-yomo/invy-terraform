@@ -51,6 +51,10 @@ resource "google_cloud_run_service" "invy_api" {
           value = upstash_redis_database.invy.password
         }
         env {
+          name  = "REDIS_PORT"
+          value = upstash_redis_database.invy.port
+        }
+        env {
           name  = "FIREBASE_SECRET_KEY_PATH"
           value = "/secrets/firebase/key.firebase.json"
         }
@@ -110,21 +114,12 @@ resource "google_cloud_run_domain_mapping" "invy_api" {
   }
 }
 
-data "google_iam_policy" "no_auth" {
-  binding {
-    role = "roles/run.invoker"
-    members = [
-      "allUsers",
-    ]
-  }
-}
-
-resource "google_cloud_run_service_iam_policy" "invy_api_no_auth" {
+resource "google_cloud_run_service_iam_member" "all_users_are_run_invoker" {
+  project  = local.project
   location = google_cloud_run_service.invy_api.location
-  project  = google_cloud_run_service.invy_api.project
   service  = google_cloud_run_service.invy_api.name
-
-  policy_data = data.google_iam_policy.no_auth.policy_data
+  role     = "roles/run.invoker"
+  member   = "allUsers"
 }
 
 resource "google_cloud_run_service_iam_member" "api_ci_is_run_admin" {
