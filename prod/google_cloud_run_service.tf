@@ -23,6 +23,10 @@ resource "google_cloud_run_v2_service" "invy_api" {
         value = google_storage_bucket.avatar_images.name
       }
       env {
+        name  = "GCS_CHAT_MESSAGE_IMAGE_BUCKET_NAME"
+        value = google_storage_bucket.chat_images.name
+      }
+      env {
         name  = "ALLOWED_ORIGINS"
         value = "https://invy-app.com"
       }
