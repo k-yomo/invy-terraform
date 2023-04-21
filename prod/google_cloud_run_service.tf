@@ -1,3 +1,4 @@
+
 resource "google_cloud_run_v2_service" "invy_api" {
   name         = "invy-api-${local.env}"
   location     = local.default_region
@@ -13,6 +14,10 @@ resource "google_cloud_run_v2_service" "invy_api" {
       env {
         name  = "APP_ENV"
         value = "prod"
+      }
+      env {
+        name  = "ROOT_URL"
+        value = "https://${local.api_domain}"
       }
       env {
         name  = "GCP_PROJECT_ID"
@@ -114,7 +119,7 @@ resource "google_cloud_run_v2_service" "invy_api" {
 
 resource "google_cloud_run_domain_mapping" "invy_api" {
   location = local.default_region
-  name     = "api.${local.root_domain}"
+  name     = local.api_domain
 
   metadata {
     namespace = local.project
